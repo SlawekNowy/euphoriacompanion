@@ -1,6 +1,9 @@
 package eclipse.euphoriacompanion.shader;
 
 import eclipse.euphoriacompanion.EuphoriaCompanion;
+import eclipse.euphoriacompanion.report.BlockReporter;
+import eclipse.euphoriacompanion.util.BlockRegistryHelper;
+import eclipse.euphoriacompanion.util.MCVersionChecker;
 import net.minecraft.client.Minecraft;
 
 import java.io.BufferedReader;
@@ -12,6 +15,7 @@ import static eclipse.euphoriacompanion.report.BlockReporter.processShaderBlocks
 import static eclipse.euphoriacompanion.util.BlockRegistryHelper.getGameBlocks;
 import static eclipse.euphoriacompanion.util.MCVersionChecker.evaluateCondition;
 import static eclipse.euphoriacompanion.util.MCVersionChecker.getMCVersion;
+
 
 public class ShaderPackProcessor {
     public static void processShaderPacks(Path gameDir) {
@@ -31,7 +35,7 @@ public class ShaderPackProcessor {
         Map<String, List<String>> blocksByMod = new TreeMap<>();
         Set<String> gameBlocks = getGameBlocks(blocksByMod);
 
-        Path logsDir = Minecraft.getMinecraft().gameDir.toPath().resolve("logs");
+        Path logsDir = Minecraft.getInstance().gameDirectory.toPath().resolve("logs");
         if (!Files.exists(logsDir)) {
             try {
                 Files.createDirectories(logsDir);
@@ -51,7 +55,7 @@ public class ShaderPackProcessor {
                     shaderBlocks = readShaderBlockProperties(shaderpackPath);
                 } else if (Files.isRegularFile(shaderpackPath) && shaderpackName.toLowerCase().endsWith(".zip")) {
                     EuphoriaCompanion.LOGGER.info("Processing shaderpack (ZIP): {}", shaderpackName);
-                    try (FileSystem zipFs = FileSystems.newFileSystem(shaderpackPath, null)) {
+                    try (FileSystem zipFs = FileSystems.newFileSystem(shaderpackPath,(ClassLoader) null)) {
                         Path root = zipFs.getPath("/");
                         shaderBlocks = readShaderBlockProperties(root);
                     } catch (IOException e) {

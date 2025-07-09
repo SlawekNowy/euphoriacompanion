@@ -1,12 +1,12 @@
 package eclipse.euphoriacompanion.util;
 
 import eclipse.euphoriacompanion.EuphoriaCompanion;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.ModList;
 
 public class MCVersionChecker {
 
     public static int getMCVersion() {
-        String version = Loader.instance().getMinecraftModContainer().getVersion();
+        String version = ModList.get().getModContainerById("minecraft").orElseThrow().getModInfo().getVersion().toString();
         try {
             String[] parts = version.split("\\.");
             int major = Integer.parseInt(parts[0]);

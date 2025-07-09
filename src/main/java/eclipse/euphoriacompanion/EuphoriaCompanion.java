@@ -1,18 +1,20 @@
 package eclipse.euphoriacompanion;
 
+import com.mojang.logging.LogUtils;
 import eclipse.euphoriacompanion.client.ClientKeyHandler;
 import eclipse.euphoriacompanion.shader.ShaderPackProcessor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+//import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.slf4j.Logger;
 
-@Mod(modid = EuphoriaCompanion.MODID, name = "Euphoria Companion", version = "1.0.2")
+@Mod(EuphoriaCompanion.MODID)
 public class EuphoriaCompanion {
     public static final String MODID = "euphoriacompanion";
-    public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static final Logger LOGGER = LogUtils.getLogger();
 
+    /*
     @Mod.EventHandler
     public static void onServerStarting(FMLServerStartingEvent event) {
         LOGGER.info("Server starting, processing shader packs");
@@ -25,4 +27,11 @@ public class EuphoriaCompanion {
             ClientKeyHandler.register();
         }
     }
+     */
+
+    public EuphoriaCompanion(FMLJavaModLoadingContext context) {
+
+    }
+
+
 }
