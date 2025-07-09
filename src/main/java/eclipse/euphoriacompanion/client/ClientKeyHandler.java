@@ -10,6 +10,7 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 //import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 //import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,31 +24,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 
-@Mod.EventBusSubscriber(modid = EuphoriaCompanion.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientKeyHandler {
     private static final Lazy<KeyMapping> ANALYZE_KEY =Lazy.of(() -> new KeyMapping("key.euphoriacompanion.analyze", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_F6, "category.euphoriacompanion.keys")) ;
 
-    /*
-    public static void register() {
-        ClientRegistry.registerKeyBinding(analyzeKey);
-        MinecraftForge.EVENT_BUS.register(new ClientKeyHandler());
-    }
+    @Mod.EventBusSubscriber(modid = EuphoriaCompanion.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public class ModKeybind {
 
-    @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && analyzeKey.isPressed()) {
-            ShaderPackProcessor.processShaderPacks(getClientGameDir());
+        @SubscribeEvent
+        public void registerBindings(RegisterKeyMappingsEvent event)
+        {
+            event.register(ANALYZE_KEY.get());
         }
-    }
-*/
 
-    @SubscribeEvent
-    public void registerBindings(RegisterKeyMappingsEvent event)
-    {
-        event.register(ANALYZE_KEY.get());
+
     }
 
-    private Path getClientGameDir() {
-        return Minecraft.getInstance().gameDirectory.toPath();
+    @Mod.EventBusSubscriber(modid = EuphoriaCompanion.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    public class KeybindLogic {
+        private Path getClientGameDir() {
+            return Minecraft.getInstance().gameDirectory.toPath();
+        }
+        @SubscribeEvent
+        public void onClientTick(TickEvent.ClientTickEvent event) {
+            if (event.phase == TickEvent.Phase.END) {
+                while (ANALYZE_KEY.get().consumeClick()) {
+                    ShaderPackProcessor.processShaderPacks(getClientGameDir());
+                }
+            }
     }
+
+    }
+
+
+
 }

@@ -3,6 +3,8 @@ package eclipse.euphoriacompanion;
 import com.mojang.logging.LogUtils;
 import eclipse.euphoriacompanion.client.ClientKeyHandler;
 import eclipse.euphoriacompanion.shader.ShaderPackProcessor;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 //import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 //import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -30,7 +32,10 @@ public class EuphoriaCompanion {
      */
 
     public EuphoriaCompanion(FMLJavaModLoadingContext context) {
-
+        IEventBus modEventBus = context.getModEventBus();
+        ClientKeyHandler handl = new ClientKeyHandler();
+        modEventBus.register(handl.new ModKeybind());
+        MinecraftForge.EVENT_BUS.register(handl.new KeybindLogic());
     }
 
 
